@@ -33,4 +33,8 @@ public class UserClient {
     public String getBearerToken(Response response){
         return response.then().extract().jsonPath().getString("accessToken");
     }
+
+    public String getRefreshToken(Response response){
+        return response.then().extract().jsonPath().getString("refreshToken");
+    }
 }
