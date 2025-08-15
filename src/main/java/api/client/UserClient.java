@@ -1,7 +1,6 @@
 package api.client;
 
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import api.User;
 
 import static io.restassured.RestAssured.given;
