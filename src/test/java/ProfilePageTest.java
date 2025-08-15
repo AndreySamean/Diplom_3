@@ -71,42 +71,6 @@ public class ProfilePageTest {
 
     @Test
     @DisplayName("Выход по кнопке «Выйти» в личном кабинете")
-    public void profileLogOut_UILogin_success(){
-        open(LOGIN_PAGE);
-
-        LoginPage loginPage = new LoginPage();
-        loginPage.loginUser(user.getEmail(), user.getPassword());
-
-        Header header = new Header();
-        header.clickProfileButton();
-
-        ProfilePage profilePage = new ProfilePage();
-        profilePage.clickQuitButton();
-
-        assertTrue(loginPage.loginButtonIsEnabled());
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("dataProvider")
-    @DisplayName("Переход по клику на «Конструктор» и на логотип Stellar Burgers")
-    public void goToMainPage_buttonParameterUILogin_success(String description, Runnable action){
-        open(LOGIN_PAGE);
-
-        LoginPage loginPage = new LoginPage();
-        loginPage.loginUser(user.getEmail(), user.getPassword());
-
-        Header header = new Header();
-        header.clickProfileButton();
-
-        action.run();
-
-        MainPage mainPage = new MainPage();
-        assertTrue(mainPage.isPlaceAnOrderButtonEnabled());
-    }
-
-    @Test
-    @DisplayName("Выход по кнопке «Выйти» в личном кабинете")
-    @Disabled("PROFILE_PAGE: страница не открывается по прямой ссылке даже вручную")
     public void profileLogOut_APILogin_success(){
         response = client.loginUser(user);
         bearerToken = client.getBearerToken(response);
@@ -130,13 +94,16 @@ public class ProfilePageTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("dataProvider")
     @DisplayName("Переход по клику на «Конструктор» и на логотип Stellar Burgers")
-    @Disabled("PROFILE_PAGE: страница не открывается по прямой ссылке даже вручную")
     public void goToMainPage_buttonParameterAPILogin_success(String description, Runnable action){
         response = client.loginUser(user);
         bearerToken = client.getBearerToken(response);
+        String refreshToken = client.getRefreshToken(response);
         open(REGISTRATION_PAGE);
         Selenide.executeJavaScript(
                 "localStorage.setItem('accessToken', '" + bearerToken + "');"
+        );
+        Selenide.executeJavaScript(
+                "localStorage.setItem('refreshToken', '" + refreshToken + "');"
         );
         open(PROFILE_PAGE);
         action.run();
